@@ -71,6 +71,13 @@
             .attr("cx",p.x)
             .attr("cy",p.y)
             .attr("class","dot")
+            .call(drag);
+        }
+
+        function dragmove(d){
+          var x = d3.event.x;
+          var y = d3.event.y;
+          d3.select(this).attr("cx",x).attr("cy",y);
         }
         </script>
     </body>
