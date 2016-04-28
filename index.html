@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        <script type="text/javascript" src="d3/d3.v3.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+          // Set up size
+          var width = 750,
+          	height = width;
+
+          // Set up projection that map is using
+          var projection = d3.geo.mercator()
+          	.center([-122.433701, 37.767683]) // San Francisco, roughly
+          	.scale(225000)
+          	.translate([width / 2, height / 2]);
+          // This is the mapping between <longitude, latitude> position to <x, y> pixel position on the map
+          // projection([lon, lat]) returns [x, y]
+
+          // Add an svg element to the DOM
+          var svg = d3.select("body").append("svg")
+          	.attr("width", width)
+          	.attr("height", height)
+            .on("click",click);
+
+          // Add svg map at correct size, assumes map is saved in a subdirectory called "data"
+          svg.append("image")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("xlink:href", "data/sf-map.svg");
+
+          d3.json("data/scpd_incidents.json", function(error, data) {
+            // This function gets called when the request is resolved (either failed or succeeded)
+            if (error) {
+              // Handle error if there is any
+              return console.warn(error);
+            }
+            // If there is no error, then data is actually ready to use
+            visualize(data);
+          });
+
+          function visualize(data,filters){
+            var filtered_data = data;
+            circles = d3.select("svg").selectAll("circle").data(data.data)
+
+            circles.enter()
+            .append("circle")
+            .attr("r","2px")
+            .attr("cx",function(incident){return projection(incident.Location)[0]})
+            .attr("cy", function(incident){return projection(incident.Location)[1]})
+            .attr("fill","steelblue");
+
+            circles.exit().remove();
+          }
+        var drag = d3.behavior.drag().on("drag",dragmove)
+        function dragmove(d){
+          var x = d3.event.X;
+          var y = d3.event.Y;
+          d3.select(this).attr("cx",x).attr("cy",y);
+        }
+        function click(){
+          if (d3.event.defaultPrevented)return;
+
+          var point = d3.mouse(this);
+          var p = {x:point[0],y:point[1]};
+
+          svg.append("circle")
+            .attr("r","8px")
+            .attr("cx",p.x)
+            .attr("cy",p.y)
+            .attr("class","dot")
+        }
+        </script>
+    </body>
+</html>
