@@ -4,11 +4,15 @@
         <meta charset="utf-8">
         <title>D3 Test</title>
         <script type="text/javascript" src="d3/d3.v3.js"></script>
+        <script type="text/javascript" src="d3/d3.slider.js"></script>
         <input type="checkbox" value="A"> Dot A<br>
+        <input type="range"  min="0" max="5" step="0.1" id="ARange"> Dot A<br>
     </head>
     <body>
+      <div id="slider1"></div>
         <script type="text/javascript">
           // Set up size
+          d3.select('#slider1').call(d3.slider());
           var width = 750,
           	height = width,
             RadiusOfEarth = 3959; //In Miles
@@ -62,7 +66,7 @@
         function dragmove(d){
           var x = d3.event.X;
           var y = d3.event.Y;
-          d3.select(this).attr("cx",x).attr("cy",y);
+          d3.selectAll(this).attr("cx",x).attr("cy",y);
 
 
         }
@@ -79,15 +83,18 @@
             .attr("class","dot")
             .call(drag);
         }
-
+        A_radius = 2;
+        A_location = 0;
         function dragmove(d){
           var x = d3.event.x;
           var y = d3.event.y;
-          console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
-          d3.select(this).attr("cx",x).attr("cy",y);
-          CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)<=2)})
+          A_location =[x,y] ;
+          //console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
+          d3.selectAll("[id=ACircle]").attr("cx",x).attr("cy",y);
+          //d3.selectAll(this).attr("cx",x).attr("cy",y);
+          CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)<=A_radius)})
           CircInRange.attr("r","2px")
-          CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)>2)})
+          CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)>A_radius)})
           CircNotInRange.attr("r",0)
         }
         MondayListener = d3.select("[value=A]").on("change",ACheckChanged)
@@ -99,12 +106,36 @@
                 .attr("cy",10)
                 .attr("class","dot")
                 .attr("fill","red")
-                .attr("value","ACircle")
-                .call(drag);
+                .attr("id","ACircle")
+                //.call(drag);
+              svg.append("circle")
+                .attr("r",145)
+                .attr("cx",10)
+                .attr("cy",10)
+                .attr("class","dot")
+                .attr("fill","")
+                .attr("id","ACircle")
+                .attr("fill-opacity","0.03")
+                //.call(drag)
+              g = d3.selectAll("[id=ACircle]")
+              g.call(drag)
+
             }else {
-              d3.select("[value=ACircle]").remove();
+              d3.selectAll("[id=ACircle]").remove();
               circles.attr("r","2px")
             }
+        }
+        d3.select("#ARange").on("input", function() {update(+this.value);});
+        function update(nRadius) {
+          A_radius = nRadius;
+          // update the circle radius
+          d3.select("#ARange")
+            .attr("r", nRadius);
+          d3.selectAll("[id=ACircle]").filter("[fill-opacity='0.03']").attr('r',nRadius*72.5)
+          CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)})
+          CircInRange.attr("r","2px")
+          CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)>A_radius)})
+          CircNotInRange.attr("r",0)
         }
         </script>
     </body>
