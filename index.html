@@ -11,6 +11,11 @@
         <input type="range"  min="0" max="5" step="0.1" id="BRange"> Dot B<br>
     </head>
     <body>
+    <div class="filter_options">
+	<input class="filter_button" id="a_button" type="checkbox">a</input><br>
+	<input class="filter_button" id="b_button" type="checkbox">b</input><br>
+	<input class="filter_button" id="c_button" type="checkbox">c</input><br>
+	</div>
       <div id="slider1"></div>
         <script type="text/javascript">
           // Set up size
@@ -76,6 +81,8 @@
             .attr("cy", function(incident){return projection(incident.Location)[1]})
             .attr("fill","steelblue");
 
+		  var peopleTable = tabulate(filtered_data, ["Category", "DayOfWeek", "Description","IncidentNumber", "Date", "Time","Resolution", "Location"]);
+
             circles.exit().remove();
           }
         function dragmove(d){
@@ -104,6 +111,7 @@
           A_location =[x,y] ;
           //console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
           d3.selectAll("[id=ACircle]").attr("cx",x).attr("cy",y);
+          circles.attr('r','0px')
           //d3.selectAll(this).attr("cx",x).attr("cy",y);
           circles.attr('r','0px')
           CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)<=A_radius)})
@@ -185,9 +193,20 @@
               circles.attr("r","2px")
             }
         }
-
         function update(ARadius) {
           A_radius = ARadius;
+        d3.selectAll(".filter_button").on("change", function() {
+ 		 var type = this.value,
+  			// I *think* "inline" is the default.
+  			display = this.checked ? "inline" : "none";
+
+ 			 svg.selectAll(".symbol")
+		    .filter(function(d) { return d.properties.type === type; })
+		    .attr("display", display);
+		});
+        d3.select("#ARange").on("input", function() {update(+this.value);});
+        function update(nRadius) {
+          A_radius = nRadius;
           // update the circle radius
           d3.select("#ARange")
             .attr("r", A_radius);
@@ -211,6 +230,52 @@
           //CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)>A_radius)})
           //CircNotInRange.attr("r",0)
         }
+
+
+        function tabulate(data, columns) {
+         //    var table = d3.select("body").append("table")
+         //    	.attr("style", "margin-left: 0px")
+         //    	.attr("height",100),
+        	// thead = table.append("thead"),
+       	 //    tbody = table.append("tbody");
+       	 d3.select("body").selectAll('table').data([0]).enter().append('table');
+		 var table = d3.select("body").select('table');
+
+		table.selectAll('thead').data([0]).enter().append('thead');
+		var thead = table.select('thead');
+
+		table.selectAll('tbody').data([0]).enter().append('tbody');
+		var tbody = table.select('tbody');
+
+    // append the header row
+	    thead.append("tr")
+	        .selectAll("th")
+	        .data(columns)
+	        .enter()
+	        .append("th")
+	        .text(function(column) { return column; });
+
+    // create a row for each object in the data
+	    var rows = tbody.selectAll("tr")
+	        .data(data.data)
+	        .enter()
+	        .append("tr");
+
+
+    // create a cell in each row for each column
+	    var cells = rows.selectAll("td")
+	        .data(function(row) {
+	            return columns.map(function(column) {
+	                return {column: column, value: row[column]};
+	            });
+	        })
+        	.enter()
+	        .append("td")
+	        .attr("style", "font-family: Courier") // sets the font style
+            .html(function(d) { return d.value; });
+
+		    return table;
+		}
         </script>
     </body>
 </html>
