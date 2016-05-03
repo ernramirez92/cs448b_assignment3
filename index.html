@@ -193,20 +193,21 @@
               circles.attr("r","2px")
             }
         }
-        function update(ARadius) {
-          A_radius = ARadius;
+
         d3.selectAll(".filter_button").on("change", function() {
- 		 var type = this.value,
+        var type = this.value
   			// I *think* "inline" is the default.
   			display = this.checked ? "inline" : "none";
 
- 			 svg.selectAll(".symbol")
+ 			  svg.selectAll(".symbol")
 		    .filter(function(d) { return d.properties.type === type; })
 		    .attr("display", display);
-		});
+		    });
+
         d3.select("#ARange").on("input", function() {update(+this.value);});
         function update(nRadius) {
           A_radius = nRadius;
+
           // update the circle radius
           d3.select("#ARange")
             .attr("r", A_radius);
