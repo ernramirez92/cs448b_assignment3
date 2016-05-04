@@ -86,14 +86,25 @@
               </div>
               <div class="col-md-4">
                 <p> <b>Crime Type</b></p>
-                <input id="NON-CRIMINAL_button" type="checkbox" >Non-Criminal</input><br>
+                <input id="Arson_button" type="checkbox" >Arson</input><br>
                 <input id="ASSAULT_button" type="checkbox" >Assault</input><br>
-                <input id="LARCENY_THEFT_button" type="checkbox" >Larceny/Theft</input><br>
+                <input id="Burglary_button" type="checkbox" >Burglary</input><br>
                 <input id="DRUG_NARCOTIC_button" type="checkbox" >Drug/Narcotic</input><br>
-                <input id="TRESPASS_button" type="checkbox" >Trespass</input><br>
-                <input id="WARRANTS_button" type="checkbox" >Warrants</input><br>
+                <input id="DUI_button" type="checkbox" >DUI</input><br>
+                <input id="Kidnapping_button" type="checkbox" >Kidnapping</input><br>
+                <input id="Sex_Offense_button" type="checkbox" >Sex Offense</input><br>
+                <input id="Missing_Person_button" type="checkbox" >Missing Person</input><br>
+                <input id="Robber_button" type="checkbox" >Robbery</input><br>
+                <input id="Suspicious_button" type="checkbox" >Suspicious Occ.</input><br>
+                <input id="LARCENY_THEFT_button" type="checkbox" >Larceny/Theft</input><br>
                 <input id="Vandalism_button" type="checkbox">Vandalism</input><br>
+                <input id="Vehicle_THEFT_button" type="checkbox" >Vehicle Theft</input><br>
+                <input id="WARRANTS_button" type="checkbox" >Warrants</input><br>
+                <input id="TRESPASS_button" type="checkbox" >Trespass</input><br>
+                <input id="Weapons_button" type="checkbox">Weapon Laws</input><br>
+                <input id="White_Collar_button" type="checkbox">White Collar</input><br>
                 <input id="OTHER_OFFENSES_button" type="checkbox">Other</input><br>
+                <input id="NON-CRIMINAL_button" type="checkbox" >Non-Criminal</input><br>
               </div>
               <div class="col-md-5">
                 <p> <b>Resolution</b></p>
@@ -130,7 +141,7 @@
           var B_Flag = 0;
           var Time_Flag = 0;
           DoWFlags = [0,0,0,0,0,0,0]
-          CatFlags = [0,0,0,0,0,0,0,0]
+          CatFlags = [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0]
           ResFlags = [0,0,0,0,0,0,0,0,0,0]
           //d3.select('#slider1').call(d3.slider());
           var width = 650,
@@ -194,7 +205,7 @@
             visualize(AllData)
           }
 
-          function NonCriminalChanged(){
+          function ArsonChanged(){
            if(this.checked){CatFlags[0]=1}
            else{CatFlags[0]=0}
            visualize(AllData)
@@ -204,7 +215,7 @@
            else{CatFlags[1]=0;}
            visualize(AllData)
          }
-         function LarcenyChanged(){
+         function BurglaryChanged(){
            if(this.checked){CatFlags[2]=1}
            else{CatFlags[2]=0;}
            visualize(AllData)
@@ -214,26 +225,81 @@
            else{CatFlags[3]=0;}
            visualize(AllData)
          }
-         function TrespassChanged(){
+         function DUIChanged(){
            if(this.checked){CatFlags[4]=1}
            else{CatFlags[4]=0;}
            visualize(AllData)
          }
-         function WarrantsChanged(){
+         function KidnappingChanged(){
            if(this.checked){CatFlags[5]=1}
            else{CatFlags[5]=0;}
            visualize(AllData)
          }
-         function VandalismChanged(){
+         function SexChanged(){
            if(this.checked){CatFlags[6]=1}
            else{CatFlags[6]=0;}
            visualize(AllData)
          }
-         function OtherOffensesChanged(){
+         function MissPerChanged(){
            if(this.checked){CatFlags[7]=1}
            else{CatFlags[7]=0;}
            visualize(AllData)
          }
+         function RobberyChanged(){
+           if(this.checked){CatFlags[8]=1}
+           else{CatFlags[8]=0;}
+           visualize(AllData)
+         }
+         function SuspChanged(){
+           if(this.checked){CatFlags[9]=1}
+           else{CatFlags[9]=0;}
+           visualize(AllData)
+         }
+         function LarcenyChanged(){
+            if(this.checked){CatFlags[10]=1}
+            else{CatFlags[10]=0;}
+            visualize(AllData)
+         }
+         function VandalismChanged(){
+          if(this.checked){CatFlags[11]=1}
+          else{CatFlags[11]=0;}
+          visualize(AllData)
+         }
+         function VehChanged(){
+           if(this.checked){CatFlags[12]=1}
+           else{CatFlags[12]=0;}
+           visualize(AllData)
+         }
+         function WarrantsChanged(){
+           if(this.checked){CatFlags[13]=1}
+           else{CatFlags[13]=0;}
+           visualize(AllData)
+         }
+         function TrespassChanged(){
+           if(this.checked){CatFlags[14]=1}
+           else{CatFlags[14]=0;}
+           visualize(AllData)
+         }
+         function WeaponsChanged(){
+          if(this.checked){CatFlags[15]=1}
+          else{CatFlags[15]=0}
+          visualize(AllData)
+        }
+        function WhiteCollarChanged(){
+         if(this.checked){CatFlags[16]=1}
+         else{CatFlags[16]=0}
+         visualize(AllData)
+       }
+       function OtherChanged(){
+        if(this.checked){CatFlags[17]=1}
+        else{CatFlags[17]=0}
+        visualize(AllData)
+      }
+        function NonCriminalChanged(){
+         if(this.checked){CatFlags[18]=1}
+         else{CatFlags[18]=0}
+         visualize(AllData)
+       }
 
 
          function NoneChanged(){
@@ -365,14 +431,28 @@
           FridayListener = d3.select("[id=Friday_button]").on("change",FridayChanged);
           SaturdayListener = d3.select("[id=Saturday_button]").on("change",SaturdayChanged);
 
-          NonCriminalListener = d3.select("[id=NON-CRIMINAL_button]").on("change",NonCriminalChanged);
+          ArsonListener = d3.select("[id=Arson_button]").on("change",ArsonChanged);
           AssaultListener = d3.select("[id=ASSAULT_button]").on("change",AssaultChanged);
-          LarcenyListener = d3.select("[id=LARCENY_THEFT_button]").on("change",LarcenyChanged);
+          BurglaryListener = d3.select("[id=Burglary_button]").on("change",BurglaryChanged);
           DrugListener = d3.select("[id=DRUG_NARCOTIC_button]").on("change",DrugChanged);
-          TrespassListener = d3.select("[id=TRESPASS_button]").on("change",TrespassChanged);
-          WarrantsListener = d3.select("[id=WARRANTS_button]").on("change",WarrantsChanged);
+          DUIListener = d3.select("[id=DUI_button]").on("change",DUIChanged);
+          KidnappingListener = d3.select("[id=Kidnapping_button]").on("change",KidnappingChanged);
+          SexListener = d3.select("[id=Sex_Offense_button]").on("change",SexChanged);
+          MissPerListener = d3.select("[id=Missing_Person_button]").on("change",MissPerChanged);
+          RobberyListener = d3.select("[id=Robber_button]").on("change",RobberyChanged);
+          SuspListener = d3.select("[id=Suspicious_button]").on("change",SuspChanged);
+          LarcenyListener = d3.select("[id=LARCENY_THEFT_button]").on("change",LarcenyChanged);
           VandalismListener = d3.select("[id=Vandalism_button]").on("change",VandalismChanged);
-          OtherOffensesListener = d3.select("[id=OTHER_OFFENSES_button]").on("change",OtherOffensesChanged);
+          VehListener = d3.select("[id=Vehicle_THEFT_button]").on("change",VehChanged);
+          WarrantsListener = d3.select("[id=WARRANTS_button]").on("change",WarrantsChanged);
+          TrespassListener = d3.select("[id=TRESPASS_button]").on("change",TrespassChanged);
+          WeaponsListener = d3.select("[id=Weapons_button]").on("change",WeaponsChanged);
+          WhiteCollarListener = d3.select("[id=White_Collar_button]").on("change",WhiteCollarChanged);
+          OtherOffensesListener = d3.select("[id=OTHER_OFFENSES_button]").on("change",OtherChanged);
+          NonCriminalListener = d3.select("[id=NON-CRIMINAL_button]").on("change",NonCriminalChanged);
+
+
+
 
           NoneListener = d3.select("[id=Resolution_None_button]").on("change",NoneChanged);
           ComplainantListener = d3.select("[id=Resolution_Complainant_button]").on("change",ComplainantChanged);
@@ -423,28 +503,61 @@
             for (i=0;i<CatFlags.length;i++){
 
               if ((i==0 && (CatFlags[i] == 1))){
-                return_value = return_value || d.Category=="NON-CRIMINAL"
+                return_value = return_value || d.Category=="ARSON"
               }
               if (i == 1 && (CatFlags[i] == 1)){
                 return_value = return_value || d.Category=="ASSAULT"
               }
               if (i == 2 && (CatFlags[i] == 1)){
-                return_value = return_value || d.Category=="LARCENY/THEFT"
+                return_value = return_value || d.Category=="BURGLARY"
               }
               if (i == 3 && (CatFlags[i] == 1)){
                 return_value = return_value || d.Category=="DRUG/NARCOTIC"
               }
               if (i == 4 && (CatFlags[i] == 1)){
-                return_value = return_value || d.Category=="TRESPASS"
+                return_value = return_value || d.Category=="DRIVING UNDER THE INFLUENCE"
               }
               if (i == 5 && (CatFlags[i] == 1)){
-                return_value = return_value || d.Category=="WARRANTS"
+                return_value = return_value || d.Category=="KIDNAPPING"
               }
               if (i == 6 && (CatFlags[i] == 1)){
-                return_value = return_value || d.Category=="VANDALISM"
+                return_value = return_value || d.Category.slice(0,"SEX OFFENSES".length)=="SEX OFFENSES"
               }
               if (i == 7 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="MISSING PERSON"
+              }
+              if (i == 8 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="ROBBERY"
+              }
+              if (i == 9 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="SUSPICIOUS OCC"
+              }
+              if (i == 10 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="LARCENY/THEFT"
+              }
+              if (i == 11 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="VANDALISM"
+              }
+              if (i == 12 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="VEHICLE THEFT"
+              }
+              if (i == 13 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="WARRANTS"
+              }
+              if (i == 14 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="TRESPASS"
+              }
+              if (i == 15 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="WEAPON LAWS"
+              }
+              if (i == 16 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="EMBEZZLEMENT" || d.Category== "FRAUD"
+              }
+              if (i == 17 && (CatFlags[i] == 1)){
                 return_value = return_value || d.Category=="OTHER OFFENSES"
+              }
+              if (i == 18 && (CatFlags[i] == 1)){
+                return_value = return_value || d.Category=="NON-CRIMINAL"
               }
             }
             //console.log(return_value)
