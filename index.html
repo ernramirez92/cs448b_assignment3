@@ -6,7 +6,7 @@
         <script type="text/javascript" src="d3/d3.v3.js"></script>
         <script type="text/javascript" src="d3/d3.slider.js"></script>
         <input type="checkbox" value="A"> Dot A</input>
-        <input type="range"  min="0" max="5" step="0.1" id="ARange"> Dot A </input>
+        <input type="range"  min="0" max="5" step="0.1" id="ARange"></input><p id ="A_miles"></p>
         <input type="checkbox" value="B"> Dot B </input>
         <input type="range"  min="0" max="5" step="0.1" id="BRange"> Dot B<br></input>
     </head>
@@ -14,22 +14,22 @@
 
       <div id="wrap">
         <div id="left_col">
-          <input id="Sunday_button" type="checkbox" checked>Sunday</input><br>
-          <input id="Monday_button" type="checkbox" checked>Monday</input><br>
-          <input id="Tuesday_button" type="checkbox" checked>Tuesday</input><br>
-          <input id="Wednesday_button" type="checkbox" checked>Wednesday</input><br>
-          <input id="Thursday_button" type="checkbox" checked>Thursday</input><br>
-          <input id="Friday_button" type="checkbox" checked>Friday</input><br>
-          <input id="Saturday_button" type="checkbox" checked>Saturday</input><br>
+          <input id="Sunday_button" type="checkbox" >Sunday</input><br>
+          <input id="Monday_button" type="checkbox" >Monday</input><br>
+          <input id="Tuesday_button" type="checkbox" >Tuesday</input><br>
+          <input id="Wednesday_button" type="checkbox" >Wednesday</input><br>
+          <input id="Thursday_button" type="checkbox" >Thursday</input><br>
+          <input id="Friday_button" type="checkbox" >Friday</input><br>
+          <input id="Saturday_button" type="checkbox" >Saturday</input><br>
         </div>
         <div id="right_col">
-          <input id="NON-CRIMINAL_button" type="checkbox" checked>Non-Criminal</input><br>
-          <input id="ASSAULT_button" type="checkbox" checked>Assault</input><br>
-          <input id="LARCENY_THEFT_button" type="checkbox" checked>Larceny/Theft</input><br>
-          <input id="DRUG_NARCOTIC_button" type="checkbox" checked>Drug/Narcotic</input><br>
-          <input id="TRESPASS_button" type="checkbox" checked>Trespass</input><br>
-          <input id="WARRANTS_button" type="checkbox" checked>Warrants</input><br>
-          <input id="OTHER_OFFENSES_button" type="checkbox" checked>Other Offenses</input><br>
+          <input id="NON-CRIMINAL_button" type="checkbox" >Non-Criminal</input><br>
+          <input id="ASSAULT_button" type="checkbox" >Assault</input><br>
+          <input id="LARCENY_THEFT_button" type="checkbox" >Larceny/Theft</input><br>
+          <input id="DRUG_NARCOTIC_button" type="checkbox" >Drug/Narcotic</input><br>
+          <input id="TRESPASS_button" type="checkbox" >Trespass</input><br>
+          <input id="WARRANTS_button" type="checkbox" >Warrants</input><br>
+          <input id="OTHER_OFFENSES_button" type="checkbox" >Other Offenses</input><br>
         </div>
       </div>
       <!-- <div class="filter_options">
@@ -62,7 +62,7 @@
            width:300px;
         }
         #right_col {
-           float:right;
+           float:left;
            width:300px;
         }
       </style>
@@ -71,8 +71,8 @@
           var AllData = 0;
           var A_Flag = 0;
           var B_Flag = 0;
-          DoWFlags = [1,1,1,1,1,1,1]
-          CatFlags = [1,1,1,1,1,1,1]
+          DoWFlags = [0,0,0,0,0,0,0]
+          CatFlags = [0,0,0,0,0,0,0]
           d3.select('#slider1').call(d3.slider());
           var width = 750,
           	height = width,
@@ -191,8 +191,6 @@
                   .attr("id","ACircle")
                   .on("mouseup",Amouseup)
                   .call(drag);
-                //g = d3.selectAll("[id=ACircle]").filter("[fill=red]")
-                //g.call(drag)
 
               }else {
                 A_Flag = 0;
@@ -347,9 +345,19 @@
             //filtered_data = data;
             d3.selectAll("[id=used_circle]").remove()
             circles = d3.select("svg").selectAll("circle").data(AllData.data).enter()
-            .append("circle").attr("id","unused_circle")
-            .filter(DoW_Filter)
-            .filter(Category_Filter);
+            .append("circle").attr("id","unused_circle");
+            for (i=0;i<CatFlags.length;i++){
+              if (CatFlags[i]==1){
+                circles = circles.filter(Category_Filter);
+                break;
+              }
+            }
+            for (i=0;i<DoWFlags.length;i++){
+              if (DoWFlags[i]==1){
+                circles = circles.filter(DoW_Filter);
+                break;
+              }
+            }
             if (A_Flag ==1){
               circles = circles.filter(DotA_Filter);
             }
@@ -369,26 +377,22 @@
             //t_head = d3.select("Body").select("table").select("thead")
             t_head_row = t_head.append("tr")
             //t_head_row = t_head.select("tr")
-            heading = ["Category", "DayOfWeek", "Description","IncidentNumber", "Date", "Time","Resolution", "Location"]
+            heading = ["Category", "DayOfWeek", "Description", "Date", "Time","Resolution"]
             for (i=0;i<heading.length;i++){
               t_head_row.append("th").text(heading[i])
             }
             t_body = table.append("tbody");
             circles.each(function(d){
-              console.log(d.Category)
+              //console.log(d.Category)
               t_row = t_body.append("tr")
               t_row.append("td").text(d.Category)
               t_row.append("td").text(d.DayOfWeek)
               t_row.append("td").text(d.Description)
-              t_row.append("td").text(d.IncidentNumber)
-              t_row.append("td").text(d.Date)
+              t_row.append("td").text(d.Date.slice(0,10))
               t_row.append("td").text(d.Time)
               t_row.append("td").text(d.Resolution)
-              t_row.append("td").text(d.Location)
               return true
             })
-            //d3.select("table").remove()
-            //var peopleTable = tabulate(AllData, ["Category", "DayOfWeek", "Description","IncidentNumber", "Date", "Time","Resolution", "Location"]);
           }
 
 
@@ -416,68 +420,25 @@
           var x = d3.event.x;
           var y = d3.event.y;
           A_location =[x,y] ;
-          //console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
           d3.selectAll("[id=ACircle]").attr("cx",x).attr("cy",y);
           d3.selectAll("[id=BCircle]").select("[fill=red]").attr("cx",B_location[0]).attr("cy",B_location[1])
-          //circles.attr('r','0px')
-          //d3.selectAll(this).attr("cx",x).attr("cy",y);
-          //circles.attr('r','0px')
-          //CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)<=A_radius)})
-          //CircInRange.attr("r","2px")
-          //CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)>A_radius)})
-          //CircNotInRange.attr("r",0)
         }
 
         function Bdragmove(d){
           var x = d3.event.x;
           var y = d3.event.y;
           B_location =[x,y] ;
-          //console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
           d3.selectAll("[id=BCircle]").attr("cx",x).attr("cy",y);
           d3.selectAll("[id=ACircle]").select("[fill=red]").attr("cx",A_location[0]).attr("cy",A_location[1])
-          //d3.selectAll(this).attr("cx",x).attr("cy",y);
-          //circles.attr('r','0px')
-          //CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)<=B_radius)})
-          //CircInRange.attr("r","2px")
-          //CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),incident.Location)>A_radius)})
-          //CircNotInRange.attr("r",0)
         }
 
 
         function Bmouseup(){
-          //console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
-          //d3.selectAll("[id=BCircle]").attr("cx",x).attr("cy",y);
-          //d3.selectAll(this).attr("cx",x).attr("cy",y);
           visualize();
-          // if(A_Flag==1 && B_Flag==1){
-          //   circles.attr('r','0px')
-          //   CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(B_location),incident.Location)<=B_radius)})
-          //                         .filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)});
-          //   CircInRange.attr("r","2px")
-          // }
-          // else{
-          //   circles.attr('r','0px')
-          //   CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(B_location),incident.Location)<=B_radius)})
-          //   CircInRange.attr("r","2px")
-          // }
         }
 
         function Amouseup(){
-          //console.log(RadiusOfEarth*d3.geo.distance(projection.invert([x,y]),[-122.433701, 37.767683]));
-          //d3.selectAll("[id=BCircle]").attr("cx",x).attr("cy",y);
-          //d3.selectAll(this).attr("cx",x).attr("cy",y);
           visualize();
-          // if(A_Flag==1 && B_Flag==1){
-          //   circles.attr('r','0px')
-          //   CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(B_location),incident.Location)<=B_radius)})
-          //                         .filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)});
-          //   CircInRange.attr("r","2px")
-          // }
-          // else{
-          //   circles.attr('r','0px')
-          //   CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)})
-          //   CircInRange.attr("r","2px")
-          // }
         }
 
         d3.selectAll(".filter_button").on("change", function() {
@@ -495,96 +456,21 @@
 
         function update(nRadius) {
           A_radius = nRadius;
-          // update the circle radius
-          //d3.select("#ARange")
-          //  .attr("r", A_radius);
-          // if(A_Flag==1 && B_Flag==1){
-          //   d3.selectAll("[id=ACircle]").filter("[fill-opacity='0.03']").attr('r',A_radius*72.5)
-          //   circles.attr('r','0px')
-          //   CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(B_location),incident.Location)<=B_radius)})
-          //                         .filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)});
-          //   CircInRange.attr("r","2px")
-          // }
+          d3.select("head").selectAll("input").filter("[id=ARange]").text(A_radius+" miles");
           if(A_Flag==1){
             d3.selectAll("[id=ACircle]").filter("[fill-opacity='0.03']").attr('r',A_radius*72.5);
             visualize();
-            // circles.attr('r','0px');
-            // CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)})
-            // CircInRange.attr("r","2px")
-            //CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)>A_radius)})
-            //CircNotInRange.attr("r",0)
           }
         }
 
         function Bupdate(BRadius) {
           B_radius = BRadius;
-          // update the circle radius
-          //d3.select("#BRange").attr("r", B_radius);
-          // if(A_Flag==1 && B_Flag==1){
-          //   d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
-          //   circles.attr('r','0px')
-          //   CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(B_location),incident.Location)<=B_radius)})
-          //                         .filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)<=A_radius)});
-          //   CircInRange.attr("r","2px")
-          // }
           if(B_Flag==1){
             d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
             visualize()
-            // circles.attr('r','0px');
-            // CircInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(B_location),incident.Location)<=B_radius)})
-            // CircInRange.attr("r","2px")
-            // //CircNotInRange = circles.filter(function(incident){ return (RadiusOfEarth*d3.geo.distance(projection.invert(A_location),incident.Location)>A_radius)})
-            //CircNotInRange.attr("r",0)
           }
         }
 
-
-        function tabulate(data, columns) {
-         //    var table = d3.select("body").append("table")
-         //    	.attr("style", "margin-left: 0px")
-         //    	.attr("height",100),
-        	// thead = table.append("thead"),
-       	 //    tbody = table.append("tbody");
-       	 d3.select("body").selectAll('table').data([0]).enter().append('table');
-    		 var table = d3.select("body").select('table');
-
-      		table.selectAll('thead').data([0]).enter().append('thead');
-      		var thead = table.select('thead');
-
-      		table.selectAll('tbody').data([0]).enter().append('tbody');
-      		var tbody = table.select('tbody');
-
-        // append the header row
-    	    thead.append("tr")
-    	        .selectAll("th")
-    	        .data(columns)
-    	        .enter()
-    	        .append("th")
-    	        .text(function(column) { return column; });
-
-    // create a row for each object in the data
-	    var rows = tbody.selectAll("tr")
-	        .data(data.data)
-	        .enter()
-	        .append("tr").attr("id","unused_row").filter(DoW_Filter)
-          .filter(Category_Filter).attr("id","used_row");
-          d3.select("body").select("tbody").selectAll("[id = unused_row]").remove()
-
-
-    // create a cell in each row for each column
-	    var cells = rows.selectAll("td")
-	        .data(function(row) {
-	            return columns.map(function(column) {
-	                return {column: column, value: row[column]};
-	            });
-	        })
-        	.enter()
-	        .append("td")
-	        .attr("style", "font-family: Courier") // sets the font style
-            .html(function(d) { return d.value; });
-
-		    return table;
-		}
         </script>
     </body>
 </html>
