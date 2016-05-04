@@ -389,6 +389,8 @@
 
           d3.select("#ARange").on("input", function() {update(+this.value);});
           d3.select("#BRange").on("input", function() {Bupdate(+this.value);});
+          d3.select("#ARange").on("mouseup", function() {visualize()});
+          d3.select("#BRange").on("mouseup", function() {visualize()});
           d3.select("#StartTime").on("input", function() {Startupdate(+this.value);});
           d3.select("#StartTime").on("mouseup",function(){visualize()});
           d3.select("#StopTime").on("input", function() {Stopupdate(+this.value);});
@@ -712,7 +714,7 @@
           //d3.select("head").selectAll("input").filter("[id=ARange]").select("text").text(A_radius+" miles");
           if(A_Flag==1){
             d3.selectAll("[id=ACircle]").filter("[fill-opacity='0.03']").attr('r',A_radius*Px_Ml_Scale);
-            visualize();
+            //visualize();
           }
         }
 
@@ -721,7 +723,7 @@
           d3.select("#BRadius-value").text(B_radius+" miles");
           if(B_Flag==1){
             d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*Px_Ml_Scale)
-            visualize()
+            //visualize()
           }
         }
 
