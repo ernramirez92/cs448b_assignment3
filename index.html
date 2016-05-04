@@ -313,7 +313,8 @@
               }else {
                 A_Flag = 0;
                 d3.selectAll("[id=ACircle]").remove();
-                circles.attr("r","2px")
+                //circles.attr("r","2px")
+                visualize();
               }
           }
 
@@ -345,6 +346,7 @@
               }else {
                 B_Flag = 0;
                 d3.selectAll("[id=BCircle]").remove();
+                visualize();
               }
           }
 
