@@ -726,10 +726,7 @@
 
         function Startupdate(time) {
           StartTimeVal = time;
-          if(StartTimeVal%60==0){
-            d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":"+StartTimeVal%60+"0");
-          }
-          else if((StartTimeVal%60)<10){
+          if((StartTimeVal%60)<10){
             d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":0"+StartTimeVal%60);
           }
           else{
@@ -742,8 +739,8 @@
         }
         function Stopupdate(time) {
           EndTimeVal = time;
-          if(EndTimeVal%60==0){
-            d3.select("#StopTime-value").text(Math.floor(EndTimeVal/60)+":"+EndTimeVal%60+"0");
+          if((EndTimeVal%60)<10){
+            d3.select("#StopTime-value").text(Math.floor(EndTimeVal/60)+":0"+EndTimeVal%60);
           }
           else{
             d3.select("#StopTime-value").text(Math.floor(EndTimeVal/60)+":"+EndTimeVal%60);
