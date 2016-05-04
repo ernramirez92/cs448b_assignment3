@@ -132,7 +132,7 @@
           DoWFlags = [0,0,0,0,0,0,0]
           CatFlags = [0,0,0,0,0,0,0,0]
           ResFlags = [0,0,0,0,0,0,0,0,0,0]
-          d3.select('#slider1').call(d3.slider());
+          //d3.select('#slider1').call(d3.slider());
           var width = 650,
           	height = width,
             RadiusOfEarth = 3959; //In Miles
@@ -140,7 +140,7 @@
           // Set up projection that map is using
           var projection = d3.geo.mercator()
           	.center([-122.433701, 37.767683]) // San Francisco, roughly
-          	.scale(225000)
+          	.scale(225000*width/750)
           	.translate([width / 2, height / 2]);
           // This is the mapping between <longitude, latitude> position to <x, y> pixel position on the map
           // projection([lon, lat]) returns [x, y]
