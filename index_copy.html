@@ -229,54 +229,44 @@
          }
 
 
-         function NoneChanged(){
-          if(this.checked){ResFlags[0]=1}
-          else{ResFlags[0]=0}
+         function NonCriminalChanged(){
+          if(this.checked){CatFlags[0]=1}
+          else{CatFlags[0]=0}
           visualize(AllData)
         }
-        function ComplainantChanged(){
-          if(this.checked){ResFlags[1]=1}
-          else{ResFlags[1]=0;}
+        function AssaultChanged(){
+          if(this.checked){CatFlags[1]=1}
+          else{CatFlags[1]=0;}
           visualize(AllData)
         }
-        function ProsecutedChanged(){
-          if(this.checked){ResFlags[2]=1}
-          else{ResFlags[2]=0;}
+        function LarcenyChanged(){
+          if(this.checked){CatFlags[2]=1}
+          else{CatFlags[2]=0;}
           visualize(AllData)
         }
-        function BookedChanged(){
-          if(this.checked){ResFlags[3]=1}
-          else{ResFlags[3]=0;}
+        function DrugChanged(){
+          if(this.checked){CatFlags[3]=1}
+          else{CatFlags[3]=0;}
           visualize(AllData)
         }
-        function CitedChanged(){
-          if(this.checked){ResFlags[4]=1}
-          else{ResFlags[4]=0;}
+        function TrespassChanged(){
+          if(this.checked){CatFlags[4]=1}
+          else{CatFlags[4]=0;}
           visualize(AllData)
         }
-        function ClearanceChanged(){
-          if(this.checked){ResFlags[5]=1}
-          else{ResFlags[5]=0;}
+        function WarrantsChanged(){
+          if(this.checked){CatFlags[5]=1}
+          else{CatFlags[5]=0;}
           visualize(AllData)
         }
-        function JuvenileChanged(){
-          if(this.checked){ResFlags[6]=1}
-          else{ResFlags[6]=0;}
+        function VandalismChanged(){
+          if(this.checked){CatFlags[6]=1}
+          else{CatFlags[6]=0;}
           visualize(AllData)
         }
-        function ClearedChanged(){
-          if(this.checked){ResFlags[7]=1}
-          else{ResFlags[7]=0;}
-          visualize(AllData)
-        }
-        function PsychopathicChanged(){
-          if(this.checked){ResFlags[8]=1}
-          else{ResFlags[8]=0;}
-          visualize(AllData)
-        }
-        function UnfoundedChanged(){
-          if(this.checked){ResFlags[9]=1}
-          else{ResFlags[9]=0;}
+        function OtherOffensesChanged(){
+          if(this.checked){CatFlags[7]=1}
+          else{CatFlags[7]=0;}
           visualize(AllData)
         }
 
@@ -359,17 +349,6 @@
           WarrantsListener = d3.select("[id=WARRANTS_button]").on("change",WarrantsChanged);
           VandalismListener = d3.select("[id=Vandalism_button]").on("change",VandalismChanged);
           OtherOffensesListener = d3.select("[id=OTHER_OFFENSES_button]").on("change",OtherOffensesChanged);
-
-          NoneListener = d3.select("[id=Resolution_None_button]").on("change",NoneChanged);
-          ComplainantListener = d3.select("[id=Resolution_Complainant_button]").on("change",ComplainantChanged);
-          ProsecutedListener = d3.select("[id=Resolution_Not_Prosecuted_button]").on("change",ProsecutedChanged);
-          BookedListener = d3.select("[id=Resolution_Arrest_Book_button]").on("change",BookedChanged);
-          CitedListener = d3.select("[id=Resolution_Arrest_Cite_button]").on("change",CitedChanged);
-          ClearanceListener = d3.select("[id=Resolution_Exceptional_button]").on("change",ClearanceChanged);
-          JuvenileListener = d3.select("[id=Resolution_Juvenile_button]").on("change",JuvenileChanged);
-          ClearedListener = d3.select("[id=Resolution_Cleared_button]").on("change",ClearedChanged);
-          PsychopathicListener = d3.select("[id=Resolution_Psychopathic_button]").on("change",PsychopathicChanged);
-          UnfoundedListener = d3.select("[id=Resolution_Unfounded_button]").on("change",UnfoundedChanged);
 
           d3.select("#ARange").on("input", function() {update(+this.value);});
           d3.select("#BRange").on("input", function() {Bupdate(+this.value);});
@@ -459,45 +438,6 @@
             return return_value
           }
 
-          function Res_Filter(d){
-            return_value = 0;
-            for (i=0;i<ResFlags.length;i++){
-
-              if ((i==0 && (ResFlags[i] == 1))){
-                return_value = return_value || d.Resolution=="NONE"
-              }
-              if (i == 1 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="Complainant Refuses To Prosecute"
-              }
-              if (i == 2 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="NOT PROSECUTED"
-              }
-              if (i == 3 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="ARREST, BOOKED"
-              }
-              if (i == 4 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="ARREST, CITED"
-              }
-              if (i == 5 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="EXCEPTIONAL CLEARANCE"
-              }
-              if (i == 6 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="JUVENILE BOOKED"
-              }
-              if (i == 7 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="CLEARED-CONTACT JUVENILE FOR MORE INFO LOCATED"
-              }
-              if (i == 8 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="PSYCHOPATHIC CASE"
-              }
-              if (i == 9 && (ResFlags[i] == 1)){
-                return_value = return_value || d.Resolution=="UNFOUNDED"
-              }
-            }
-            //console.log(return_value)
-            return return_value
-          }
-
           d3.json("data/scpd_incidents.json", function(error, data) {
             // This function gets called when the request is resolved (either failed or succeeded)
             if (error) {
@@ -524,12 +464,6 @@
             for (i=0;i<DoWFlags.length;i++){
               if (DoWFlags[i]==1){
                 circles = circles.filter(DoW_Filter);
-                break;
-              }
-            }
-            for (i=0;i<ResFlags.length;i++){
-              if (ResFlags[i]==1){
-                circles = circles.filter(Res_Filter);
                 break;
               }
             }
