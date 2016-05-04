@@ -52,9 +52,9 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-8" id="svg_col">
+          <div class="col-md-7" id="svg_col">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-5">
             <div class="row">
               <div class="col-md-12">
                 <input type="checkbox" value="A"> Home</input>
@@ -74,7 +74,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <p> <b>Day of Week</b></p>
                 <input id="Sunday_button" type="checkbox" >Sunday</input><br>
                 <input id="Monday_button" type="checkbox" >Monday</input><br>
@@ -95,7 +95,7 @@
                 <input id="Vandalism_button" type="checkbox">Vandalism</input><br>
                 <input id="OTHER_OFFENSES_button" type="checkbox">Other</input><br>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 <p> <b>Resolution</b></p>
                 <input id="Resolution_None_button" type="checkbox" >None</input><br>
                 <input id="Resolution_Complainant_button" type="checkbox" >Complainant Refuses To Prosecute</input><br>
@@ -118,6 +118,10 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12" id="table_col">
+          </div>
+        </div>
       </div>
         <script type="text/javascript">
           // Set up size
@@ -129,7 +133,7 @@
           CatFlags = [0,0,0,0,0,0,0,0]
           ResFlags = [0,0,0,0,0,0,0,0,0,0]
           d3.select('#slider1').call(d3.slider());
-          var width = 750,
+          var width = 650,
           	height = width,
             RadiusOfEarth = 3959; //In Miles
 
@@ -385,7 +389,9 @@
           d3.select("#ARange").on("input", function() {update(+this.value);});
           d3.select("#BRange").on("input", function() {Bupdate(+this.value);});
           d3.select("#StartTime").on("input", function() {Startupdate(+this.value);});
+          d3.select("#StartTime").on("mouseup",function(){visualize()});
           d3.select("#StopTime").on("input", function() {Stopupdate(+this.value);});
+          d3.select("#StopTime").on("mouseup",function(){visualize()} );
 
           // Add an svg element to the DOM
           var svg = d3.select("body").select("#svg_col").append("svg")
@@ -588,8 +594,8 @@
                 .style("opacity", 0);
              });
             d3.selectAll("[id=unused_circle]").remove()
-            d3.select("Body").select("table").remove()//.select("tbody").remove()
-            table = d3.select("Body").append("table").attr("style", "margin-left: 0px")	.attr("height",100)
+            d3.select("table").remove()//.select("tbody").remove()
+            table = d3.select("#table_col").append("table").attr("style", "margin-left: 0px")	.attr("height",100)
             //table = d3.select("Body").select("table")
             t_head = table.append("thead")
             //t_head = d3.select("Body").select("table").select("thead")
@@ -723,12 +729,15 @@
           if(StartTimeVal%60==0){
             d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":"+StartTimeVal%60+"0");
           }
+          else if((StartTimeVal%60)<10){
+            d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":0"+StartTimeVal%60);
+          }
           else{
             d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":"+StartTimeVal%60);
           }
           if(Time_Flag==1){
             //d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
-            visualize()
+            //visualize()
           }
         }
         function Stopupdate(time) {
@@ -742,7 +751,7 @@
 
           if(Time_Flag==1){
             //d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
-            visualize()
+            //visualize()
           }
         }
 
