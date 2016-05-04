@@ -148,6 +148,7 @@
           var drag = d3.behavior.drag().on("drag",dragmove)
           var Bdrag = d3.behavior.drag().on("drag",Bdragmove)
 
+          Px_Ml_Scale = 72.5*width/750
           A_radius = 2;
           A_location = [0,0];
 
@@ -296,7 +297,7 @@
                 A_Flag = 1;
 
                 svg.append("circle")
-                  .attr("r",145)
+                  .attr("r",A_radius*Px_Ml_Scale)
                   .attr("cx",10)
                   .attr("cy",10)
                   .attr("class","dot")
@@ -326,7 +327,7 @@
               if (this.checked) {
                 B_Flag = 1;
                 svg.append("circle")
-                  .attr("r",145)
+                  .attr("r",B_radius*Px_Ml_Scale)
                   .attr("cx",30)
                   .attr("cy",10)
                   .attr("class","dot")
@@ -710,7 +711,7 @@
           d3.select("#ARadius-value").text(A_radius+" miles");
           //d3.select("head").selectAll("input").filter("[id=ARange]").select("text").text(A_radius+" miles");
           if(A_Flag==1){
-            d3.selectAll("[id=ACircle]").filter("[fill-opacity='0.03']").attr('r',A_radius*72.5);
+            d3.selectAll("[id=ACircle]").filter("[fill-opacity='0.03']").attr('r',A_radius*Px_Ml_Scale);
             visualize();
           }
         }
@@ -719,7 +720,7 @@
           B_radius = BRadius;
           d3.select("#BRadius-value").text(B_radius+" miles");
           if(B_Flag==1){
-            d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
+            d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*Px_Ml_Scale)
             visualize()
           }
         }
