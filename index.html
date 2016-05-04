@@ -57,13 +57,13 @@
           <div class="col-md-4">
             <div class="row">
               <div class="col-md-12">
-                <input type="checkbox" value="A"> Dot A</input>
+                <input type="checkbox" value="A"> Home</input>
                 <input type="range"  min="0" max="5" step="0.1" id="ARange"></input><p>radius = <span id="ARadius-value">2 miles</span></p>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
-                <input type="checkbox" value="B"> Dot B </input>
+                <input type="checkbox" value="B"> Work </input>
                 <input type="range"  min="0" max="5" step="0.1" id="BRange"></input <p>radius = <span id="BRadius-value">2 miles</span></p>
               </div>
             </div>
@@ -109,11 +109,11 @@
                 <input id="Resolution_Unfounded_button" type="checkbox" >Unfounded</input><br>
               </div>
             </div>
-            <div id="wrap">
-              <div id="left_col">
-              </div>
-              <div id="right_col">
-
+            <div class="row">
+              <div class="col-md-12">
+                <input type="checkbox" value="Time"> Time </input>
+                <input type="range" value="0"  min="0" max="1440" step="5" id="StartTime"></input <p>Start Time = <span id="StartTime-value">00:00</span></p>
+                <input type="range" value="1440" min="0" max="1440" step="5" id="StopTime"></input <p>End Time = <span id="StopTime-value">23:59</span></p>
               </div>
             </div>
           </div>
@@ -124,6 +124,7 @@
           var AllData = 0;
           var A_Flag = 0;
           var B_Flag = 0;
+          var Time_Flag = 0;
           DoWFlags = [0,0,0,0,0,0,0]
           CatFlags = [0,0,0,0,0,0,0,0]
           ResFlags = [0,0,0,0,0,0,0,0,0,0]
@@ -149,12 +150,13 @@
           B_radius = 2;
           B_location = [0,0];
 
-          function SundayChanged(){
+          StartTimeVal = 0;
+          EndTimeVal = 1440;
 
+          function SundayChanged(){
             if(this.checked){DoWFlags[0]=1}
             else{DoWFlags[0]=0}
             visualize(AllData)
-
           }
           function MondayChanged(){
             if(this.checked){DoWFlags[1]=1}
@@ -279,6 +281,11 @@
           else{ResFlags[9]=0;}
           visualize(AllData)
         }
+        function TimeChanged(){
+          if(this.checked){Time_Flag=1}
+          else{Time_Flag=0;}
+          visualize(AllData)
+        }
 
           function ACheckChanged(){
               if (this.checked) {
@@ -371,8 +378,12 @@
           PsychopathicListener = d3.select("[id=Resolution_Psychopathic_button]").on("change",PsychopathicChanged);
           UnfoundedListener = d3.select("[id=Resolution_Unfounded_button]").on("change",UnfoundedChanged);
 
+          TimeRangeListener = d3.select("[value=Time]").on("change",TimeChanged);
+
           d3.select("#ARange").on("input", function() {update(+this.value);});
           d3.select("#BRange").on("input", function() {Bupdate(+this.value);});
+          d3.select("#StartTime").on("input", function() {Startupdate(+this.value);});
+          d3.select("#StopTime").on("input", function() {Stopupdate(+this.value);});
 
           // Add an svg element to the DOM
           var svg = d3.select("body").select("#svg_col").append("svg")
@@ -498,6 +509,13 @@
             return return_value
           }
 
+          function Time_Filter(d){
+            return_value = 0;
+
+            time = +(60*d.Time.slice(0,2)) + (+d.Time.slice(3,5))
+            return StartTimeVal<=time && time<=EndTimeVal
+          }
+
           d3.json("data/scpd_incidents.json", function(error, data) {
             // This function gets called when the request is resolved (either failed or succeeded)
             if (error) {
@@ -538,6 +556,9 @@
             }
             if (B_Flag ==1){
               circles = circles.filter(DotB_Filter);
+            }
+            if (Time_Flag ==1){
+              circles = circles.filter(Time_Filter);
             }
             circles.attr("r","2px")
             .attr("cx",function(incident){return projection(incident.Location)[0]})
@@ -672,7 +693,7 @@
 		    .attr("display", display);
 		    });
 
-        d3.select("#ARange").on("input", function() {update(+this.value);});
+        //d3.select("#ARange").on("input", function() {update(+this.value);});
 
         //d3.select("head").selectAll("input").filter("[id=ARange]").append("text").text("hello")
 
@@ -691,6 +712,34 @@
           d3.select("#BRadius-value").text(B_radius+" miles");
           if(B_Flag==1){
             d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
+            visualize()
+          }
+        }
+
+        function Startupdate(time) {
+          StartTimeVal = time;
+          if(StartTimeVal%60==0){
+            d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":"+StartTimeVal%60+"0");
+          }
+          else{
+            d3.select("#StartTime-value").text(Math.floor(StartTimeVal/60)+":"+StartTimeVal%60);
+          }
+          if(Time_Flag==1){
+            //d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
+            visualize()
+          }
+        }
+        function Stopupdate(time) {
+          EndTimeVal = time;
+          if(EndTimeVal%60==0){
+            d3.select("#StopTime-value").text(Math.floor(EndTimeVal/60)+":"+EndTimeVal%60+"0");
+          }
+          else{
+            d3.select("#StopTime-value").text(Math.floor(EndTimeVal/60)+":"+EndTimeVal%60);
+          }
+
+          if(Time_Flag==1){
+            //d3.selectAll("[id=BCircle]").filter("[fill-opacity='0.03']").attr('r',B_radius*72.5)
             visualize()
           }
         }
